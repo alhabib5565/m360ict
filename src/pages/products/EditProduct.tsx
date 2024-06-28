@@ -1,26 +1,49 @@
-import { Button, Col, Form, Input, InputNumber, Row, Select } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Rate,
+  Row,
+  Select,
+  message,
+} from "antd";
 import { productsApi } from "../../redux/api/productApi";
 import { useParams } from "react-router-dom";
 import EditFormSkeleton from "../../components/EditFormSkeleton";
 import { TCategory, TProduct } from "../../types/product.type";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const EditProduct = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const {
     data: productData,
     isLoading,
     isFetching,
   } = productsApi.useGetProductByIdQuery(id);
+
   const { data: categoryData, isLoading: categoryLoading } =
     productsApi.useGetCategoriesQuery({});
+
+  const [editProduct] = productsApi.useEditProductMutation();
+
   const categoryOption = categoryData?.map((item: TCategory) => ({
     value: item.slug,
     label: item.name,
   }));
 
-  const onFinish = (value: Partial<TProduct>) => {
-    console.log(value);
+  const onFinish = async (value: Partial<TProduct>) => {
+    await editProduct({ id, data: value });
+    messageApi.open({
+      type: "success",
+      content: "Product update successful",
+    });
   };
 
   if (isLoading || isFetching) return <EditFormSkeleton />;
@@ -31,6 +54,7 @@ const EditProduct = () => {
       onFinish={onFinish}
       initialValues={productData}
     >
+      {contextHolder}
       {/* title, brand & category */}
       <Row gutter={24}>
         <Col xs={{ span: 24 }} md={{ span: 8 }}>
@@ -155,6 +179,63 @@ const EditProduct = () => {
           </Form.Item>
         </Col>
       </Row>
+
+      {/* reviews */}
+      <Form.List name="reviews">
+        {(fields, { add, remove }) => (
+          <>
+            <Row align="bottom" gutter={24}>
+              {fields.map(({ key, name, ...restField }) => (
+                <Col key={key} xs={{ span: 24 }} md={{ span: 8 }}>
+                  <Flex justify="space-between" align="baseline">
+                    <Form.Item {...restField} name={[name, "rating"]}>
+                      <Rate />
+                    </Form.Item>
+                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  </Flex>
+
+                  <Form.Item
+                    {...restField}
+                    label="Reviewer Name"
+                    name={[name, "reviewerName"]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    label="Reviewer Email"
+                    name={[name, "reviewerEmail"]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    {...restField}
+                    label="comment"
+                    name={[name, "comment"]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                  <Divider />
+                </Col>
+              ))}
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item style={{ width: "100%" }}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add field
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </>
+        )}
+      </Form.List>
+
       <Row justify="end">
         <Form.Item>
           <Button type="primary" htmlType="submit">

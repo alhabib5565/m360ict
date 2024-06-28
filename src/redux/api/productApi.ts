@@ -11,11 +11,11 @@ export const productsApi = baseApi.injectEndpoints({
         getProductById: builder.query({
             query: (id) => `/products/${id}`,
         }),
-        updateProduct: builder.mutation({
-            query: ({ id, ...patch }) => ({
+        editProduct: builder.mutation({
+            query: ({ id, data }) => ({
                 url: `/products/${id}`,
                 method: 'PATCH',
-                body: patch,
+                body: data,
             }),
         }),
         getCategories: builder.query({
