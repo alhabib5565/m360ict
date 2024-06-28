@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { sidebarItemGenerator } from "../../utils/sidebarItemGenerator";
 import { paths } from "../../routes/paths";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const SidebarLayout = () => {
   const {
@@ -16,18 +16,12 @@ const SidebarLayout = () => {
         style={{ height: "100vh", position: "sticky", top: "0", left: "0" }}
         breakpoint="lg"
         collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
       >
         <div className="demo-logo-vertical" />
         <Menu theme="dark" mode="inline" items={sidebarItemGenerator(paths)} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
         <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{

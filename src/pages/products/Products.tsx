@@ -1,8 +1,9 @@
 // import { useState } from "react";
-import { Pagination, Space, Table, Tag } from "antd";
+import { Button, Image, Pagination, Space, Table, Tag } from "antd";
 import type { PaginationProps, TableProps } from "antd";
 import { productsApi } from "../../redux/api/productApi";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type ColumnsType<T extends object> = TableProps<T>["columns"];
 
@@ -10,7 +11,6 @@ interface DataType {
   key: string;
   name: string;
   age: number;
-  address: string;
   tags: string[];
 }
 
@@ -19,18 +19,30 @@ const columns: ColumnsType<DataType> = [
     title: "ID",
     dataIndex: "id",
     key: "id",
+    width: 100,
+  },
+  {
+    title: "Thumbnail",
+    dataIndex: "thumbnail",
+    key: "thumbnail",
+    width: 150,
+    render: (thumbnail) => {
+      return (
+        <Image
+          style={{
+            width: 50,
+          }}
+          src={thumbnail}
+        />
+      );
+    },
   },
   {
     title: "Product Title",
     dataIndex: "title",
     key: "title",
-    render: (text) => <a>{text}</a>,
   },
-  {
-    title: "Price",
-    dataIndex: "price",
-    key: "price",
-  },
+
   {
     title: "Tags",
     key: "tags",
@@ -38,7 +50,7 @@ const columns: ColumnsType<DataType> = [
     render: (tags: string[]) => (
       <span>
         {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
+          let color = tag.length > 6 ? "geekblue" : "green";
           if (tag === "loser") {
             color = "volcano";
           }
@@ -52,14 +64,27 @@ const columns: ColumnsType<DataType> = [
     ),
   },
   {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    align: "right",
+    width: 100,
+  },
+  {
     title: "Action",
     key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    render: (row) => {
+      return (
+        <Space size="middle">
+          <Link to={`/product/${row.id}`}>
+            <Button>Edit</Button>
+          </Link>
+          <Link to={`/${row.id}`}>
+            <Button>View Details</Button>
+          </Link>
+        </Space>
+      );
+    },
   },
 ];
 
@@ -83,6 +108,8 @@ const Products = () => {
   return (
     <div>
       <Table
+        // sticky
+        scroll={{ y: 500 }}
         loading={isLoading}
         columns={columns}
         dataSource={data?.products}

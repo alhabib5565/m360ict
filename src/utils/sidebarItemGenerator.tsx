@@ -8,6 +8,9 @@ type TSidebarItem = {
 
 export const sidebarItemGenerator = (items: TPahts[]) => {
   return items.reduce((acc: TSidebarItem[], item: TPahts) => {
+    if (!item.name) {
+      return acc;
+    }
     acc.push({
       key: item.name,
       label: <NavLink to={item.path}>{item.name}</NavLink>,

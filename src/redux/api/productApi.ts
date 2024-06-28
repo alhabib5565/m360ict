@@ -1,9 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from './baseApi';
 
 
-export const productsApi = createApi({
-    reducerPath: 'productsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
+export const productsApi = baseApi.injectEndpoints({
+
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: ({ limit, skip }) => `/products?limit=${limit}&skip=${skip}`,
@@ -20,7 +20,9 @@ export const productsApi = createApi({
         }),
         getCategories: builder.query({
             query: () => '/products/categories',
+            providesTags: ['products']
         }),
     }),
 });
 
+// export const { useGetCategoriesQuery } = productsApi
