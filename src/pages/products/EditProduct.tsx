@@ -1,86 +1,70 @@
-import { Button, Col, Form, Input, InputNumber, Row } from "antd";
+import { Button, Col, Form, Input, InputNumber, Row, Select } from "antd";
 import { productsApi } from "../../redux/api/productApi";
 import { useParams } from "react-router-dom";
+import EditFormSkeleton from "../../components/EditFormSkeleton";
+import { TCategory, TProduct } from "../../types/product.type";
 
 const EditProduct = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const { data } = productsApi.useGetProductByIdQuery(id);
-  console.log(data);
+  const {
+    data: productData,
+    isLoading,
+    isFetching,
+  } = productsApi.useGetProductByIdQuery(id);
+  const { data: categoryData, isLoading: categoryLoading } =
+    productsApi.useGetCategoriesQuery({});
+  const categoryOption = categoryData?.map((item: TCategory) => ({
+    value: item.slug,
+    label: item.name,
+  }));
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onFinish = (value: any) => {
+  const onFinish = (value: Partial<TProduct>) => {
     console.log(value);
   };
+
+  if (isLoading || isFetching) return <EditFormSkeleton />;
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={onFinish}
-      initialValues={{
-        title: "Essence Mascara Lash Princess",
-        description:
-          "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects.",
-        category: "beauty",
-        price: 9.99,
-        discountPercentage: 7.17,
-        stock: 5,
-        brand: "Essence",
-        sku: "RCH45Q1A",
-        weight: 2,
-        dimensions: {
-          width: 23.17,
-          height: 14.43,
-          depth: 28.01,
-        },
-        warrantyInformation: "1 month warranty",
-        shippingInformation: "Ships in 1 month",
-        availabilityStatus: "Low Stock",
-        minimumOrderQuantity: 24,
-      }}
+      initialValues={productData}
     >
       {/* title, brand & category */}
-      <Row gutter={8}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
-          <Form.Item
-            label="Title"
-            name="title"
-            rules={[{ required: true, message: "Please input the title!" }]}
-          >
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Form.Item label="Title" name="title">
             <Input />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
-          <Form.Item
-            label="Brand"
-            name="brand"
-            rules={[{ required: true, message: "Please input the brand!" }]}
-          >
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Form.Item label="Brand" name="brand">
             <Input />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
-          <Form.Item
-            label="Category"
-            name="category"
-            rules={[{ required: true, message: "Please input the category!" }]}
-          >
-            <Input />
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+          <Form.Item label="Category" name="category">
+            <Select
+              options={categoryOption}
+              disabled={categoryLoading}
+              showSearch
+            />
           </Form.Item>
         </Col>
       </Row>
 
       {/* price, discountPercentage, and stock */}
-      <Row gutter={8}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Price" name="price">
             <InputNumber style={{ width: "100%" }} min={0} step={0.01} />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Discount Percentage" name="discountPercentage">
             <InputNumber
               style={{ width: "100%" }}
@@ -91,7 +75,7 @@ const EditProduct = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Stock" name="stock">
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
@@ -99,14 +83,14 @@ const EditProduct = () => {
       </Row>
 
       {/* dimensions */}
-      <Row gutter={8}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Dimensions (Width)" name={["dimensions", "width"]}>
             <InputNumber style={{ width: "100%" }} min={0} step={0.01} />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item
             label="Dimensions (Height)"
             name={["dimensions", "height"]}
@@ -115,7 +99,7 @@ const EditProduct = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Dimensions (Depth)" name={["dimensions", "depth"]}>
             <InputNumber style={{ width: "100%" }} min={0} step={0.01} />
           </Form.Item>
@@ -123,20 +107,20 @@ const EditProduct = () => {
       </Row>
 
       {/* sku, weight & minimum order quantity */}
-      <Row gutter={8}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="SKU" name="sku">
             <Input />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Weight" name="weight">
             <InputNumber style={{ width: "100%" }} min={0} step={0.01} />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Minimum Order Quantity" name="minimumOrderQuantity">
             <InputNumber style={{ width: "100%" }} min={1} />
           </Form.Item>
@@ -144,20 +128,20 @@ const EditProduct = () => {
       </Row>
 
       {/* information */}
-      <Row gutter={8}>
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Warranty Information" name="warrantyInformation">
             <Input />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Shipping Information" name="shippingInformation">
             <Input />
           </Form.Item>
         </Col>
 
-        <Col xs={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }}>
+        <Col xs={{ span: 24 }} md={{ span: 8 }}>
           <Form.Item label="Availability Status" name="availabilityStatus">
             <Input />
           </Form.Item>
