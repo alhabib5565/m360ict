@@ -1,5 +1,5 @@
-import ProductDetails from "../pages/home/ProductDetails";
 import EditProduct from "../pages/products/EditProduct";
+import ProductDetails from "../pages/products/ProductDetails";
 import Products from "../pages/products/Products";
 
 export type TPahts = {
@@ -15,11 +15,11 @@ export const paths: TPahts[] = [
     element: <Products />,
   },
   {
-    path: "/:id",
+    path: "productDetails/:id",
     element: <ProductDetails />,
   },
   {
-    path: "/product/:id",
+    path: "/productEdit/:id",
     element: <EditProduct />,
   },
 ];

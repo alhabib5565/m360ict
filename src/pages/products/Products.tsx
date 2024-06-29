@@ -76,10 +76,10 @@ const columns: ColumnsType<DataType> = [
     render: (row) => {
       return (
         <Space size="middle">
-          <Link to={`/product/${row.id}`}>
+          <Link to={`/productEdit/${row.id}`}>
             <Button>Edit</Button>
           </Link>
-          <Link to={`/${row.id}`}>
+          <Link to={`/productDetails/${row.id}`}>
             <Button>View Details</Button>
           </Link>
         </Space>
