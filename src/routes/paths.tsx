@@ -11,7 +11,7 @@ export type TPahts = {
 export const paths: TPahts[] = [
   {
     name: "Product List",
-    path: "/products",
+    path: "/",
     element: <Products />,
   },
   {
@@ -19,7 +19,7 @@ export const paths: TPahts[] = [
     element: <ProductDetails />,
   },
   {
-    path: "/productEdit/:id",
+    path: "productEdit/:id",
     element: <EditProduct />,
   },
 ];

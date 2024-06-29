@@ -49,7 +49,6 @@ const ProductDetailsCarousel = ({
           overflow: "hidden",
           borderRadius: "4px",
         }}
-        // className="relative w-full h-[300px] lg:h-[400px] border rounded-md overflow-hidden"
       >
         <motion.div
           drag="x"
@@ -57,14 +56,13 @@ const ProductDetailsCarousel = ({
           style={{ x: dragX, height: "100%", width: "100%", display: "flex" }}
           animate={{ translateX: `-${activeImage * 100}%` }}
           dragConstraints={{ left: 0, right: 0 }}
-          // className="w-full h-full flex"
         >
           {allImages.map((img, index) => (
             <div
               style={{
                 backgroundImage: `url(${img})`,
                 width: "100%",
-                height: "auto",
+                height: "100%",
                 flexShrink: 0,
                 cursor: "grab",
                 backgroundPosition: "center",
